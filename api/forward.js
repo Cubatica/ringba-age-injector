@@ -4,13 +4,43 @@ export default async function handler(req, res) {
   }
 
   const randomAge = Math.floor(Math.random() * (75 - 65 + 1)) + 65;
+  
+  // Area code to zipcode mapping (sample major cities)
+  const areaCodeToZipcode = {
+    // California
+    "213": "90012", "310": "90210", "323": "90028", "424": "90405",
+    "562": "90802", "626": "91101", "714": "92701", "760": "92008",
+    "818": "91401", "858": "92122", "909": "91730", "949": "92614",
+    // Florida  
+    "305": "33139", "407": "32801", "561": "33401", "786": "33139",
+    "813": "33602", "954": "33301",
+    // New York
+    "212": "10001", "347": "11201", "516": "11501", "631": "11701",
+    "718": "11201", "917": "10001",
+    // Texas
+    "214": "75201", "469": "75201", "512": "78701", "713": "77002",
+    "832": "77002", "972": "75201",
+    // Illinois
+    "312": "60601", "773": "60601", "847": "60201",
+    // Pennsylvania
+    "215": "19102", "267": "19102", "412": "15213", "724": "15213",
+    // Arizona
+    "480": "85281", "602": "85001", "623": "85301",
+    // Default
+    "default": "90210"
+  };
+  
+  // Extract area code from CID (first 3 digits)
+  const cid = req.body.CID || "";
+  const areaCode = cid.substring(0, 3);
+  const generatedZipcode = areaCodeToZipcode[areaCode] || areaCodeToZipcode["default"];
 
   // Include age in the payload - Ringba RTB requires it!
   const payload = {
     CID: req.body.CID || "[tag:InboundNumber:Number-NoPlus]",
     exposeCallerId: "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
-    zipcode: req.body.zipcode || "[tag:Geo:ZipCode]",
+    zipcode: req.body.zipcode || generatedZipcode,  // Use generated zipcode from area code
     age: randomAge.toString()  // Always inject the random age
   };
 
