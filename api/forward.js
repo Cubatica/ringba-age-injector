@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     CID: req.body.CID || "[tag:InboundNumber:Number-NoPlus]",
     exposeCallerId: "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
-    zipcode: req.body.zipcode || "[Geo:ZipCode]",
+    zipcode: req.body.zipcode || "[tag:Geo:ZipCode]",
     age: randomAge.toString()
   };
 
