@@ -26,6 +26,8 @@ export default async function handler(req, res) {
     "215": "19102", "267": "19102", "412": "15213", "724": "15213",
     // Arizona
     "480": "85281", "602": "85001", "623": "85301",
+    // Delaware
+    "302": "19901",
     // Default
     "default": "90210"
   };
@@ -34,11 +36,14 @@ export default async function handler(req, res) {
   const cid = req.body.CID || "";
   const areaCode = cid.substring(0, 3);
   const generatedZipcode = areaCodeToZipcode[areaCode] || areaCodeToZipcode["default"];
+  
+  console.log("CID:", cid, "Area Code:", areaCode, "Generated Zipcode:", generatedZipcode);
+  console.log("Request ID:", req.body.publisherInboundCallId, "Timestamp:", new Date().toISOString());
 
-  // Include age in the payload - Ringba RTB requires it!
+  // Include all required fields for Ringba RTB
   const payload = {
     CID: req.body.CID || "[tag:InboundNumber:Number-NoPlus]",
-    exposeCallerId: "yes",
+    exposeCallerId: req.body.exposeCallerId || "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
     zipcode: req.body.zipcode || generatedZipcode,  // Use generated zipcode from area code
     age: randomAge.toString()  // Always inject the random age
@@ -61,6 +66,15 @@ export default async function handler(req, res) {
     const result = await response.text();
     console.log("Ringba RTB response:", result);
     console.log("Response status:", response.status);
+    
+    // Parse and log the response to see what Ringba actually received
+    try {
+      const parsedResult = JSON.parse(result);
+      console.log("Parsed RTB response:", JSON.stringify(parsedResult, null, 2));
+    } catch (e) {
+      console.log("Could not parse RTB response as JSON");
+    }
+    
     res.status(200).send(result);
   } catch (err) {
     console.error("Error forwarding to Ringba:", err);
