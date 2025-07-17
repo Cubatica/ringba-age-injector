@@ -10,7 +10,8 @@ export default async function handler(req, res) {
     exposeCallerId: "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
     zipcode: req.body.zipcode || "[tag:Geo:ZipCode]",
-    age: randomAge.toString()
+    age: randomAge,
+    tag1: randomAge.toString()  // Also send as tag1 for Ringba
   };
 
   console.log("Forwarded payload:", JSON.stringify(payload));
@@ -28,6 +29,8 @@ export default async function handler(req, res) {
     );
 
     const result = await response.text();
+    console.log("Ringba RTB response:", result);
+    console.log("Response status:", response.status);
     res.status(200).send(result);
   } catch (err) {
     console.error("Error forwarding to Ringba:", err);
