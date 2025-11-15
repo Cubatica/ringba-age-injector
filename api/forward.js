@@ -173,7 +173,7 @@ export default async function handler(req, res) {
     CID: req.body.CID || "[tag:InboundNumber:Number-NoPlus]",
     exposeCallerId: req.body.exposeCallerId || "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
-    zipcode: req.body.zipcode || generatedZipcode,  // Use generated zipcode from area code
+    zipcode: req.body.zipcode || "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Pass through Ringba tags if zipcode not provided
     age: randomAge.toString()  // Always inject the random age
   };
 
