@@ -181,7 +181,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      "https://rtb.ringba.com/v1/production/4376312840a84bec890323f97a8885b7.json",
+      "https://rtb.ringba.com/v1/production/7f8a0e20448a47e091435d432004f044.json",
       {
         method: "POST",
         headers: {
