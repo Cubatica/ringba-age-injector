@@ -177,11 +177,27 @@ export default async function handler(req, res) {
     age: req.body.age || randomAge.toString()  // Use req.body.age if provided, otherwise use randomAge
   };
 
+  // Pass through additional fields if provided
+  if (req.body.sipOk) {
+    payload.sipOk = req.body.sipOk;
+  }
+  if (req.body.Number) {
+    payload.Number = req.body.Number;
+  }
+  // Handle ZipCode (capital Z) if provided, but we always use the tag above
+  // Keeping zipcode field as lowercase for RTB compatibility
+
   console.log("Forwarded payload:", JSON.stringify(payload));
+
+  // Get target RTB endpoint from query parameter, with default fallback
+  const target = req.query.target || "7f8a0e20448a47e091435d432004f044";
+  const rtbUrl = `https://rtb.ringba.com/v1/production/${target}.json`;
+  
+  console.log("RTB Target:", target, "RTB URL:", rtbUrl);
 
   try {
     const response = await fetch(
-      "https://rtb.ringba.com/v1/production/7f8a0e20448a47e091435d432004f044.json",
+      rtbUrl,
       {
         method: "POST",
         headers: {
