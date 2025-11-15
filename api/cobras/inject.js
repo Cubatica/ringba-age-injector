@@ -176,7 +176,7 @@ export default async function handler(req, res) {
     zipcode: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags
     ZipCode: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags (capital Z)
     zip: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags (lowercase)
-    age: req.body.age || randomAge.toString()  // Use req.body.age if provided, otherwise use randomAge
+    age: randomAge.toString()  // Always use randomAge since tags don't resolve
   };
 
   // Pass through additional fields if provided
