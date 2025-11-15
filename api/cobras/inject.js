@@ -169,13 +169,14 @@ export default async function handler(req, res) {
   console.log("Request ID:", req.body.publisherInboundCallId, "Timestamp:", new Date().toISOString());
 
   // Include all required fields for Ringba RTB
+  // Use generated zipcode from area code mapping since tags don't resolve
   const payload = {
     CID: req.body.CID || "[tag:InboundNumber:Number-NoPlus]",
     exposeCallerId: req.body.exposeCallerId || "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
-    zipcode: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags
-    ZipCode: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags (capital Z)
-    zip: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags (lowercase)
+    zipcode: generatedZipcode,  // Use generated zipcode from area code
+    ZipCode: generatedZipcode,  // Use generated zipcode from area code (capital Z)
+    zip: generatedZipcode,  // Use generated zipcode from area code (lowercase)
     age: randomAge.toString()  // Always use randomAge since tags don't resolve
   };
 
