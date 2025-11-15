@@ -173,8 +173,8 @@ export default async function handler(req, res) {
     CID: req.body.CID || "[tag:InboundNumber:Number-NoPlus]",
     exposeCallerId: req.body.exposeCallerId || "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
-    zipcode: req.body.zipcode || "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Pass through Ringba tags if zipcode not provided
-    age: randomAge.toString()  // Always inject the random age
+    zipcode: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags
+    age: req.body.age || randomAge.toString()  // Use req.body.age if provided, otherwise use randomAge
   };
 
   console.log("Forwarded payload:", JSON.stringify(payload));
