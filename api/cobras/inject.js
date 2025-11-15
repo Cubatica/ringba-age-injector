@@ -174,6 +174,8 @@ export default async function handler(req, res) {
     exposeCallerId: req.body.exposeCallerId || "yes",
     publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
     zipcode: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags
+    ZipCode: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags (capital Z)
+    zip: "[tag:Geo:ZipCode|tag:User:zipcode|tag:User:Zip]",  // Always pass through Ringba tags (lowercase)
     age: req.body.age || randomAge.toString()  // Use req.body.age if provided, otherwise use randomAge
   };
 
@@ -184,8 +186,6 @@ export default async function handler(req, res) {
   if (req.body.Number) {
     payload.Number = req.body.Number;
   }
-  // Handle ZipCode (capital Z) if provided, but we always use the tag above
-  // Keeping zipcode field as lowercase for RTB compatibility
 
   console.log("Forwarded payload:", JSON.stringify(payload));
 
