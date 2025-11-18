@@ -168,25 +168,27 @@ export default async function handler(req, res) {
   console.log("CID:", cid, "Area Code:", areaCode, "Generated Zipcode:", generatedZipcode);
   console.log("Request ID:", req.body.publisherInboundCallId, "Timestamp:", new Date().toISOString());
 
-  // Pass through ALL parameters from request body
-  // Start with all incoming parameters
-  const payload = { ...req.body };
-  
-  // Apply fallback logic for zipcode-related fields if not provided
+  // Include all required fields for Ringba RTB
+  // Pass through values from request body, use generated values as fallback
   const zipcodeValue = req.body.zipcode || req.body.ZipCode || req.body.zip || generatedZipcode;
   
-  // Set zipcode fields with fallback logic (only if not already present)
-  if (!payload.zipcode) payload.zipcode = zipcodeValue;
-  if (!payload.ZipCode) payload.ZipCode = zipcodeValue;
-  if (!payload.zip) payload.zip = zipcodeValue;
-  
-  // Set age with fallback if not provided
-  if (!payload.age) payload.age = randomAge.toString();
-  
-  // Ensure required fields have defaults if not provided
-  if (!payload.CID) payload.CID = "[tag:InboundNumber:Number-NoPlus]";
-  if (!payload.exposeCallerId) payload.exposeCallerId = "yes";
-  if (!payload.publisherInboundCallId) payload.publisherInboundCallId = "[Call:InboundCallId]";
+  const payload = {
+    CID: req.body.CID || "[tag:InboundNumber:Number-NoPlus]",
+    exposeCallerId: req.body.exposeCallerId || "yes",
+    publisherInboundCallId: req.body.publisherInboundCallId || "[Call:InboundCallId]",
+    zipcode: zipcodeValue,  // Pass through from request or use generated
+    ZipCode: req.body.ZipCode || zipcodeValue,  // Pass through ZipCode or use zipcode value
+    zip: req.body.zip || zipcodeValue,  // Pass through zip or use zipcode value
+    age: req.body.age || randomAge.toString()  // Pass through age or use randomAge
+  };
+
+  // Pass through additional fields if provided
+  if (req.body.sipOk) {
+    payload.sipOk = req.body.sipOk;
+  }
+  if (req.body.Number) {
+    payload.Number = req.body.Number;
+  }
 
   console.log("Forwarded payload:", JSON.stringify(payload));
 
