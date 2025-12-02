@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(200).send(recentRequests.get(requestId));
   }
 
-  const randomAge = Math.floor(Math.random() * (78 - 70 + 1)) + 70;
+  const randomAge = Math.floor(Math.random() * (78 - 67)) + 65;
   
   // Comprehensive US area code to zipcode mapping
   const areaCodeToZipcode = {
